@@ -158,16 +158,33 @@ public class Declarations {
 
         public static Activity[] agilityActivities = new Activity[]{
                 new Activity("Wilderness agility course", 106000, "Deep Wilderness", "PvP Teleports", null),
+                new Activity("Gnome agility course", 34400, "Gnome Stronghold", "Skilling", null),
+                new Activity("Werewolf agility course", 47000, "Near Canifis", "Skilling", null),
                 new Activity("Black warlocks", 75000, "::Skilling or Jungle Hunter Area", "::skilling or Jungle Hunter", null),
         };
 
         public static Activity[] thievingActivities = new Activity[]{
                 new Activity("Pickpocketing Rogues", 20000, "Bar North of Yanille", "", null),
+                new Activity("Gem Stalls", 15000, "Skilling Area", "::skilling", null),
         };
 
         public static Activity[] farmingActivities = new Activity[]{
                 new Activity("Magic Trees", 400000, "Magic Secateurs Trees Teleports", "", new Supplies[]{new Supplies("Magic Sapling", 1)}),
                 new Activity("Belladonnas", 50000, "", "", new Supplies[]{new Supplies("Belladonna Seed", 1)}),
+                new Activity("Guam", 2000, "", "", null),
+                new Activity("Marrentill", 4000, "", "", null),
+                new Activity("Tarromin", 6000, "", "", null),
+                new Activity("Harralander", 8000, "", "", null),
+                new Activity("Ranarr", 10000, "", "", null),
+                new Activity("Toadflax", 13000, "", "", null),
+                new Activity("Irit", 16000, "", "", null),
+                new Activity("Avantoe", 20000, "", "", null),
+                new Activity("Kwuarm", 26000, "", "", null),
+                new Activity("Snapdragon", 32000, "", "", null),
+                new Activity("Cadantine", 40000, "", "", null),
+                new Activity("Lantadyme", 45000, "", "", null),
+                new Activity("Dwarf Weed", 50000, "", "", null),
+                new Activity("Torstol", 60000, "", "", null),
         };
 
         public static Activity[] runecraftingActivities = new Activity[]{
@@ -176,6 +193,7 @@ public class Declarations {
         };
 
         public static Activity[] constructionActivities = new Activity[]{
+                new Activity("Oak Larder", 2000, "POH Kitchen", "POH", new Supplies[]{new Supplies("Oak Plank", 8)}),
                 new Activity("Mahogany Bench", 4000, "POH Dining Hall", "POH", new Supplies[]{new Supplies("Mahogany planks", 8)}),
                 new Activity("Gilded Bench (Dining Hall)", 12000, "POH Dining Hall", "POH", new Supplies[]{new Supplies("Mahogany planks", 8), new Supplies("Gold leaf", 8)}),
                 new Activity("Gilded Bench (Throne Room)", 18000, "POH Throne Room", "POH", new Supplies[]{new Supplies("Mahogany planks", 12), new Supplies("Gold leaf", 12)}),
