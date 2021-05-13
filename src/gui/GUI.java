@@ -6,7 +6,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class GUI {
@@ -111,6 +113,14 @@ public class GUI {
         }
     }
 
+    private String formatNumber(int i) {
+        return NumberFormat.getNumberInstance(Locale.US).format(i);
+    }
+
+    private int parseFormatted(String s) throws NumberFormatException {
+        return Integer.parseInt(s.replace(",", ""));
+    }
+
 
     public GUI() {
         $$$setupUI$$$();
@@ -135,15 +145,16 @@ public class GUI {
                 try {
                     super.keyReleased(e);
                     Skill skill = (Skill) skillSelect.getSelectedItem();
-                    skill.setCurrExp(Integer.parseInt(currExp.getText()));
-                    skill.setGoalExp(Integer.parseInt(goalExp.getText()));
-                } catch (Exception ignored) {
+                    skill.setCurrExp(parseFormatted(currExp.getText()));
+                    skill.setGoalExp(parseFormatted(goalExp.getText()));
+                } catch (NumberFormatException ignored) {
                 }
             }
         };
         goalExp.addKeyListener(k);
         currExp.addKeyListener(k);
 
+        // Fill table when calculate is pressed
         calculate.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -158,7 +169,7 @@ public class GUI {
                     data[i][1] = act.getActionsForXp(diff, boost);
                     Supplies[] supplies = act.suppliesForXp(diff, boost);
                     for (int idx = 0; idx < supplies.length && idx < 2; idx++) {
-                        data[i][2 + idx] = supplies[idx].name + ": " + supplies[idx].n;
+                        data[i][2 + idx] = supplies[idx].name + ": " + formatNumber(supplies[idx].n);
                     }
                     data[i][4] = act.getLocation();
                     if (!act.getTeleport().equals("")) {
@@ -181,6 +192,7 @@ public class GUI {
             }
         });
 
+        // Look-up stats button listener
         searchButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -190,19 +202,20 @@ public class GUI {
                     HighscoreReader rdr = new HighscoreReader(name);
                     for (Skill skill : Declarations.skills) {
                         skill.setCurrExp(rdr.getXp(skill.getName()));
-                        currExp.setText(Integer.toString(((Skill) skillSelect.getSelectedItem()).getCurrExp()));
+                        currExp.setText(formatNumber(((Skill) skillSelect.getSelectedItem()).getCurrExp()));
                     }
                 } catch (Exception exc) {
                     nameField.setText("Error fetching highscores");
                 }
             }
         });
+        // Listen to skill select box for changes, update curr exp and goal exp if changed
         skillSelect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Skill skill = (Skill) skillSelect.getSelectedItem();
-                currExp.setText(Integer.toString(skill.getCurrExp()));
-                goalExp.setText(Integer.toString(skill.getGoalExp()));
+                currExp.setText(formatNumber(skill.getCurrExp()));
+                goalExp.setText(formatNumber(skill.getGoalExp()));
             }
         });
     }
@@ -211,6 +224,7 @@ public class GUI {
         return new ImageIcon(getClass().getResource("/gui/resources/" + skill + "_icon.png"));
     }
 
+    // Custom ComboBox renderer for rendering labels with icons
     static class IconListRenderer extends DefaultListCellRenderer {
         private final Map<Object, Icon> icons;
 
