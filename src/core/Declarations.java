@@ -58,7 +58,7 @@ public class Declarations {
         };
         
         public static Activity[] woodcuttingActivities = new Activity[]{
-                new Activity("Logs", 500, "Woodcutting teleport",  "Skilling", new Supplies[]{new Supplies("Shrimp", 1)}),
+                new Activity("Logs", 500, "Woodcutting teleport",  "Skilling", null),
                 new Activity("Arctic Pine Logs", 500, "Fremennik Isles",  "", null),
                 new Activity("Achey Logs", 500, "South of Castle Wars",  "Minigames", null),
                 new Activity("Oak Logs", 1000, "Woocutting Teleport",  "Skilling", null),
@@ -71,7 +71,7 @@ public class Declarations {
         };
 
         public static Activity[] firemakingActivites = new Activity[]{
-                new Activity("Logs", 500, "Woodcutting teleport",  "Skilling", new Supplies[]{new Supplies("Shrimp", 1)}),
+                new Activity("Logs", 500, "Woodcutting teleport",  "Skilling", null),
                 new Activity("Arctic Pine Logs", 500, "Fremennik Isles",  "", null),
                 new Activity("Achey Logs", 500, "South of Castle Wars",  "Minigames", null),
                 new Activity("Oak Logs", 1000, "Woocutting Teleport",  "Skilling", null),
@@ -124,7 +124,8 @@ public class Declarations {
         };
 
         public static Activity[] craftingActivities = new Activity[]{
-                new Activity("Mining marble", 15000, "Crafting Guild or Skilling Area",  "Skilling or ::skilling", null),
+                new Activity("Mining Marble", 15000, "Crafting Guild or Skilling Area",  "Skilling or ::skilling", null),
+                new Activity("Mining Runite", 12000, "Skilling Area", "::skilling", null),
         };
 
         public static Activity[] smithingActivities = new Activity[]{
