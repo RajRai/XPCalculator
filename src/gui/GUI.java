@@ -39,7 +39,7 @@ public class GUI {
     private double boost = 1.0;
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("GUI");
+        JFrame frame = new JFrame("XPCalculator");
         frame.setContentPane(new GUI().mainPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -90,12 +90,6 @@ public class GUI {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
-            }
-
-            @Override
-            public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 1) return Integer.class;
-                return super.getColumnClass(columnIndex);
             }
         };
         resultsTable.setModel(tableModel);
@@ -166,7 +160,7 @@ public class GUI {
                 for (int i = 0; i < activites.length; i++) {
                     Activity act = activites[i];
                     data[i][0] = act.getDescription();
-                    data[i][1] = act.getActionsForXp(diff, boost);
+                    data[i][1] = formatNumber(act.getActionsForXp(diff, boost));
                     Supplies[] supplies = act.suppliesForXp(diff, boost);
                     for (int idx = 0; idx < supplies.length && idx < 2; idx++) {
                         data[i][2 + idx] = supplies[idx].name + ": " + formatNumber(supplies[idx].n);
