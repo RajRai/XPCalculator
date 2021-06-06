@@ -2,6 +2,10 @@ package core;
 
 public class Declarations {
 
+        /* I was thinking about writing scrapers for the wiki for all this
+        but it actually seems easier than writing a unique scraper for all 23 pages
+        given the fact maybe 20 people will use this app */
+
         public static Activity[] combatActivities = new Activity[]{
                 new Activity("Damage (focused XP)", 950, "Anywhere",  "Combat Training or Monsters", null)
         };

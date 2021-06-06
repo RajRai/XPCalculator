@@ -95,7 +95,7 @@ public class GUI {
         resultsTable.setModel(tableModel);
     }
 
-    public void applyBoosts() {
+    private void applyBoosts() {
         try {
             boost = 1.0 + Double.parseDouble(xpBoosts.getText().replace("%", "")) / 100;
         } catch (Exception exc) {
