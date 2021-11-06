@@ -7,7 +7,13 @@ public class Declarations {
         given the fact maybe 20 people will use this app */
 
         public static Activity[] combatActivities = new Activity[]{
-                new Activity("Damage (focused XP)", 950, "Anywhere",  "Combat Training or Monsters", null)
+                new Activity("Damage (focused XP)", 1000, "Anywhere",  "Combat Training or Monsters", null),
+                new Activity("Damage (shared XP, 2 skills)", 500, "Anywhere",  "Combat Training or Monsters", null),
+                new Activity("Damage (shared XP, 3 skills)", 333, "Anywhere",  "Combat Training or Monsters", null)
+        };
+
+        public static Activity[] hitpointsActivities = new Activity[]{
+                new Activity("Damage", 333, "Anywhere",  "Combat Training or Monsters", null)
         };
 
         public static Activity[] prayerActivities = new Activity[]{
@@ -215,7 +221,7 @@ public class Declarations {
                 new Skill("Attack", combatActivities),
                 new Skill("Defence", combatActivities),
                 new Skill("Strength", combatActivities),
-                new Skill("Hitpoints", combatActivities),
+                new Skill("Hitpoints", hitpointsActivities),
                 new Skill("Ranged", combatActivities),
                 new Skill("Prayer", prayerActivities),
                 new Skill("Magic", combatActivities),
