@@ -8,11 +8,6 @@ public class Activity {
     private final String teleport;
     private final Supplies[] supplies;
 
-    /**
-     * @param supplies a double array where each interior array is a (String, Integer) pair stored in a length-2 array.
-     *                 supplies.length should give the number of different types of supplies used.
-     *                 supplies[0].length should always be 2.
-     */
     public Activity(String description, int exp, String location, String teleport, Supplies[] supplies){
         this.description = description;
         this.exp = exp;
