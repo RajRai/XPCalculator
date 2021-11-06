@@ -38,15 +38,13 @@ public class GUI {
     private JCheckBox brawlersBox;
     private JLabel otherBoostsLabel;
     private JTextField xpBoosts;
-    private JTextField supplyField1;
-    private JPanel supply2Panel;
-    private JPanel supply1Panel;
     private JPanel rightPaneCenter;
     private JPanel rightPane;
     private JPanel suppliesArea;
     private JPanel[] supplyPanels;
     private JTextField[] supplyFields;
     private JLabel[] supplyLabels;
+    private JLabel[] supplyTypes;
 
     private final String[] headers = {"Activity", "Actions", "No. Supply 1", "No. Supply 2", "Location"};
     private double boost = 1.0;
@@ -96,6 +94,37 @@ public class GUI {
         }
         skillSelect = new JComboBox<>(Declarations.skills);
         skillSelect.setRenderer(new IconListRenderer(icons));
+
+        // Generate supply panels
+        suppliesArea = new JPanel();
+        suppliesArea.setLayout(new GridLayoutManager(numSuppliesColumns + 1, 1, new Insets(0, 0, 0, 0), -1, -1));
+
+        supplyPanels = new JPanel[numSuppliesColumns];
+        supplyFields = new JTextField[numSuppliesColumns];
+        supplyLabels = new JLabel[numSuppliesColumns];
+        supplyTypes = new JLabel[numSuppliesColumns];
+        for (int i = 0; i < numSuppliesColumns; i++) {
+            supplyPanels[i] = new JPanel();
+            supplyPanels[i].setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
+            suppliesArea.add(supplyPanels[i], new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+            supplyTypes[i] = new JLabel();
+            supplyTypes[i].setText("Supply " + (i + 1) + ":");
+            supplyPanels[i].add(supplyTypes[i], new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+            supplyFields[i] = new JTextField();
+            supplyPanels[i].add(supplyFields[i], new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+            final JLabel label4 = new JLabel();
+            label4.setText("Owned:");
+            supplyPanels[i].add(label4, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+            final JLabel label5 = new JLabel();
+            label5.setText("Remaining:");
+            supplyPanels[i].add(label5, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+            supplyLabels[i] = new JLabel();
+            supplyLabels[i].setText("0");
+            supplyPanels[i].add(supplyLabels[i], new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+            suppliesArea.add(supplyPanels[i], new GridConstraints(i, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        }
+        final Spacer spacer1 = new Spacer();
+        suppliesArea.add(spacer1, new GridConstraints(numSuppliesColumns, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(-1, 10), null, new Dimension(-1, 20), 0, false));
     }
 
     private void applyBoosts() {
@@ -118,34 +147,28 @@ public class GUI {
         return Integer.parseInt(s.replace(",", ""));
     }
 
+    private void tableAndSuppliesListener() {
+        Skill skill = (Skill) skillSelect.getSelectedItem();
+        int row = resultsTable.getSelectedRow();
+        Activity act = ((ActivityTableModel) resultsTable.getModel()).getRow(row);
+        for (int i = 0; i < numSuppliesColumns; i++) {
+            int owned = 0;
+            if (!supplyFields[i].getText().equals("")) {
+                owned = parseFormatted(supplyFields[i].getText());
+            }
+            int needed = 0;
+            try {
+                needed = act.getSupplies()[i].n * act.getActionsForXp(skill.getDiff(), boost);
+                skill.getActivites()[row].getSupplies()[i].owned = owned;
+                supplyTypes[i].setText(act.getSupplies()[i].name);
+            } catch (ArrayIndexOutOfBoundsException ignored) {
+            }
+            supplyLabels[i].setText(formatNumber(needed - owned));
+        }
+    }
 
     public GUI() {
         $$$setupUI$$$();
-
-        // Generate supply panels
-        supplyPanels = new JPanel[numSuppliesColumns];
-        supplyFields = new JTextField[numSuppliesColumns];
-        supplyLabels = new JLabel[numSuppliesColumns];
-        for (int i = 0; i < numSuppliesColumns; i++) {
-            supplyPanels[i] = new JPanel();
-            supplyPanels[i].setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
-            suppliesArea.add(supplyPanels[i], new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-            final JLabel label3 = new JLabel();
-            label3.setText("Supply 1:");
-            supplyPanels[i].add(label3, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-            supplyFields[i] = new JTextField();
-            supplyPanels[i].add(supplyFields[i], new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-            final JLabel label4 = new JLabel();
-            label4.setText("Owned:");
-            supplyPanels[i].add(label4, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-            final JLabel label5 = new JLabel();
-            label5.setText("Remaining:");
-            supplyPanels[i].add(label5, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-            supplyLabels[i] = new JLabel();
-            supplyLabels[i].setText("0");
-            supplyPanels[i].add(supplyLabels[i], new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-            suppliesArea.add(supplyPanels[i], new GridConstraints(i, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        }
 
 
         // Add event listeners
@@ -181,18 +204,28 @@ public class GUI {
         KeyAdapter parseSupplies = new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                try {
-                    int row = resultsTable.getSelectedRow();
-                    for (int i = 0; i < numSuppliesColumns; i++) {
-                        continue;
-                    }
-                } catch (Exception ignored) {
-
-                }
+                super.keyReleased(e);
+                tableAndSuppliesListener();
             }
         };
+        for (int i = 0; i < numSuppliesColumns; i++) {
+            supplyFields[i].addKeyListener(parseSupplies);
+        }
 
-        // Fill table when calculate is pressed
+        resultsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                int row = resultsTable.getSelectedRow();
+                Activity act = ((ActivityTableModel) resultsTable.getModel()).getRow(row);
+                for (int i = 0; i < numSuppliesColumns && i < act.getSupplies().length; i++) {
+                    supplyFields[i].setText(formatNumber(act.getSupplies()[i].owned));
+                }
+                tableAndSuppliesListener();
+            }
+        });
+
+        // Fill table when calculate is pressed. Also format the exp boxes
         calculate.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -201,6 +234,8 @@ public class GUI {
                 Activity[] activities = skill.getActivites();
                 AbstractTableModel model = new ActivityTableModel(activities, headers, numSuppliesColumns);
                 resultsTable.setModel(model);
+                currExp.setText(formatNumber(parseFormatted(currExp.getText())));
+                goalExp.setText(formatNumber(parseFormatted(goalExp.getText())));
             }
         });
 
@@ -244,6 +279,10 @@ public class GUI {
             this.numSuppliesColumns = numSuppliesColumns;
         }
 
+        public Activity getRow(int row) {
+            return data[row];
+        }
+
         public int getColumnCount() {
             return 3 + numSuppliesColumns;
         }
@@ -254,19 +293,20 @@ public class GUI {
 
         public Object getValueAt(int row, int col) {
             Object result = null;
+            Skill skill = (Skill) skillSelect.getSelectedItem();
+            int diff = skill.getDiff();
+            int actions = data[row].getActionsForXp(diff, boost);
             if (col == 0) {
                 result = data[row].getDescription();
             } else if (col == 1) {
-                Skill skill = (Skill) skillSelect.getSelectedItem();
-                int diff = skill.getDiff();
-                result = formatNumber(data[row].getActionsForXp(diff, boost));
+                result = formatNumber(actions);
             } else if (col < 2 + numSuppliesColumns) {
                 Supplies[] supplies = data[row].getSupplies();
                 if (supplies == null) {
                     result = "";
                 } else {
                     if (col - 2 < supplies.length) {
-                        result = supplies[col - 2].name + ": " + formatNumber(supplies[col - 2].n);
+                        result = supplies[col - 2].name + ": " + formatNumber(actions * supplies[col - 2].n);
                     }
                 }
             } else if (col < 3 + numSuppliesColumns) {
@@ -364,36 +404,40 @@ public class GUI {
         searchBar.add(nameField, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, new Dimension(150, -1), null, 0, false));
         rightPane = new JPanel();
         rightPane.setLayout(new BorderLayout(0, 0));
-        gridPanel.add(rightPane, new GridConstraints(0, 1, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        gridPanel.add(rightPane, new GridConstraints(0, 1, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         rightPaneCenter = new JPanel();
         rightPaneCenter.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         Font rightPaneCenterFont = this.$$$getFont$$$(null, -1, -1, rightPaneCenter.getFont());
         if (rightPaneCenterFont != null) rightPaneCenter.setFont(rightPaneCenterFont);
         rightPane.add(rightPaneCenter, BorderLayout.CENTER);
         expArea = new JPanel();
-        expArea.setLayout(new GridLayoutManager(8, 1, new Insets(0, 0, 0, 0), -1, -1));
-        rightPaneCenter.add(expArea, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        expArea.setLayout(new GridLayoutManager(10, 1, new Insets(0, 0, 0, 0), -1, -1));
+        rightPaneCenter.add(expArea, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         currExpLabel = new JLabel();
         currExpLabel.setText("Current Experience:");
-        expArea.add(currExpLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        expArea.add(currExpLabel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         currExp = new JTextField();
-        expArea.add(currExp, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        expArea.add(currExp, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         goalExpLabel = new JLabel();
         goalExpLabel.setText("Goal Experience:");
-        expArea.add(goalExpLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        expArea.add(goalExpLabel, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         goalExp = new JTextField();
-        expArea.add(goalExp, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        expArea.add(goalExp, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         calculate = new JButton();
         calculate.setText("Calculate");
-        expArea.add(calculate, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_SOUTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        expArea.add(calculate, new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_SOUTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         brawlersBox = new JCheckBox();
         brawlersBox.setText("Brawling Gloves?");
-        expArea.add(brawlersBox, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        expArea.add(brawlersBox, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         otherBoostsLabel = new JLabel();
         otherBoostsLabel.setText("Other XP Boosts (%)");
-        expArea.add(otherBoostsLabel, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        expArea.add(otherBoostsLabel, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         xpBoosts = new JTextField();
-        expArea.add(xpBoosts, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        expArea.add(xpBoosts, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        expArea.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 20), null, null, 0, false));
+        final Spacer spacer2 = new Spacer();
+        expArea.add(spacer2, new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 50), null, null, 0, false));
         skillSelectPanel = new JPanel();
         skillSelectPanel.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         rightPane.add(skillSelectPanel, BorderLayout.NORTH);
@@ -401,45 +445,7 @@ public class GUI {
         final JLabel label2 = new JLabel();
         label2.setText("Skill Selection");
         skillSelectPanel.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, 1, null, null, null, 0, false));
-        suppliesArea = new JPanel();
-        suppliesArea.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         rightPane.add(suppliesArea, BorderLayout.SOUTH);
-        supply1Panel = new JPanel();
-        supply1Panel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
-        suppliesArea.add(supply1Panel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JLabel label3 = new JLabel();
-        label3.setText("Supply 1:");
-        supply1Panel.add(label3, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        supplyField1 = new JTextField();
-        supply1Panel.add(supplyField1, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JLabel label4 = new JLabel();
-        label4.setText("Owned:");
-        supply1Panel.add(label4, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label5 = new JLabel();
-        label5.setText("Remaining:");
-        supply1Panel.add(label5, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label6 = new JLabel();
-        label6.setText("0");
-        supply1Panel.add(label6, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        supply2Panel = new JPanel();
-        supply2Panel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
-        suppliesArea.add(supply2Panel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JLabel label7 = new JLabel();
-        label7.setText("Owned:");
-        supply2Panel.add(label7, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JTextField textField1 = new JTextField();
-        supply2Panel.add(textField1, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JLabel label8 = new JLabel();
-        label8.setText("Remaining:");
-        supply2Panel.add(label8, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label9 = new JLabel();
-        label9.setText("0");
-        supply2Panel.add(label9, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label10 = new JLabel();
-        label10.setText("Supply 2:");
-        supply2Panel.add(label10, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        suppliesArea.add(spacer1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 10), null, null, 0, false));
     }
 
     /**
