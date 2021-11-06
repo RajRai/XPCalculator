@@ -29,7 +29,7 @@ public class Declarations {
                 new Activity("Drake Bones", 12000, "Altar",  "POH, Edgeville", new Supplies[]{new Supplies("Drake Bones", 1)}),
                 new Activity("Hydra Bones", 16000, "Altar",  "POH, Edgeville", new Supplies[]{new Supplies("Hydra Bones", 1)}),
                 new Activity("Frost Dragon Bones", 20000, "Altar",  "POH, Edgeville", new Supplies[]{new Supplies("Frost Dragon Bones", 1)}),
-                new Activity("Superior Dragon Bones", 20000, "Altar",  "POH, Edgeville", new Supplies[]{new Supplies("Superior Dragon Bones", 1)}),
+                new Activity("Superior Dragon Bones", 24000, "Altar",  "POH, Edgeville", new Supplies[]{new Supplies("Superior Dragon Bones", 1)}),
         };
 
         public static Activity[] cookingActivities = new Activity[]{
