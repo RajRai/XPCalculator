@@ -1,11 +1,10 @@
-package core;
+package common;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class HighscoreReader {
