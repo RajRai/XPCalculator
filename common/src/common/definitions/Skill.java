@@ -1,15 +1,17 @@
-package core;
+package common.definitions;
 
 public class Skill {
 
     private final String name;
     private final Activity[] activities;
+    private final String hexColor;
     private int currExp = 0;
     private int goalExp = 2000000000; // Max XP, probably going to be used most frequently
 
-    public Skill(String name, Activity[] activities){
+    public Skill(String name, Activity[] activities, String hexColor){
         this.name = name;
         this.activities = activities;
+        this.hexColor = hexColor;
     }
 
     public String getName() {
@@ -18,6 +20,10 @@ public class Skill {
 
     public Activity[] getActivites() {
         return activities;
+    }
+
+    public String getHexColor() {
+        return hexColor;
     }
 
     public int getCurrExp() {

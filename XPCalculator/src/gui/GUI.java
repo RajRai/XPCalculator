@@ -3,7 +3,7 @@ package gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import core.*;
+import common.definitions.*;
 import common.HighscoreReader;
 
 import javax.swing.*;
@@ -90,10 +90,10 @@ public class GUI {
 
         // Add icons to labels
         Map<Object, Icon> icons = new HashMap<>();
-        for (Skill skill : Declarations.skills) {
+        for (Skill skill : Skills.skills) {
             icons.put(skill.toString(), getIcon(skill.toString()));
         }
-        skillSelect = new JComboBox<>(Declarations.skills);
+        skillSelect = new JComboBox<>(Skills.skills);
         skillSelect.setRenderer(new IconListRenderer(icons));
 
         // Generate supply panels
@@ -248,7 +248,7 @@ public class GUI {
                 String name = nameField.getText();
                 try {
                     HighscoreReader rdr = new HighscoreReader(name);
-                    for (Skill skill : Declarations.skills) {
+                    for (Skill skill : Skills.skills) {
                         skill.setCurrExp(rdr.getXp(skill.getName()));
                         currExp.setText(formatNumber(((Skill) skillSelect.getSelectedItem()).getCurrExp()));
                     }

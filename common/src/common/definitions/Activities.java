@@ -1,6 +1,6 @@
-package core;
+package common.definitions;
 
-public class Declarations {
+public class Activities {
 
         /* I was thinking about writing scrapers for the wiki for all this
         but it actually seems easier than writing a unique scraper for all 23 pages
@@ -217,28 +217,4 @@ public class Declarations {
                 new Activity("Dragon Imps", 2880, "Puro Puro", "Hunter Teleports", null),
         };
 
-        public static Skill[] skills = new Skill[]{
-                new Skill("Attack", combatActivities),
-                new Skill("Defence", combatActivities),
-                new Skill("Strength", combatActivities),
-                new Skill("Hitpoints", hitpointsActivities),
-                new Skill("Ranged", combatActivities),
-                new Skill("Prayer", prayerActivities),
-                new Skill("Magic", combatActivities),
-                new Skill("Cooking", cookingActivities),
-                new Skill("Woodcutting", woodcuttingActivities),
-                new Skill("Fletching", fletchingActivites),
-                new Skill("Fishing", fishingActivities),
-                new Skill("Firemaking", firemakingActivites),
-                new Skill("Crafting", craftingActivities),
-                new Skill("Smithing", smithingActivities),
-                new Skill("Mining", miningActivities),
-                new Skill("Herblore", herbloreActivities),
-                new Skill("Agility", agilityActivities),
-                new Skill("Thieving", thievingActivities),
-                new Skill("Farming", farmingActivities),
-                new Skill("Runecrafting", runecraftingActivities),
-                new Skill("Construction", constructionActivities),
-                new Skill("Hunter", hunterActivities)
-        };
 }

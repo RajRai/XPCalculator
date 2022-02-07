@@ -6,17 +6,20 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 public class HighscoreReader {
 
+    public static int CALLS = 0;
     private HashMap<String, Integer> xp = new HashMap<>();
 
-    public HighscoreReader(String name) throws IOException {
+    public HighscoreReader(String name) throws IOException, NoSuchElementException {
         String baseURL = "http://highscores.pkhonor.net/?u=";
         String nameMod = name.replace(' ', '+');
         String fullURL = baseURL + nameMod;
 
         Document doc = Jsoup.connect(fullURL).get();
+        CALLS++;
         Elements rows = doc.select("tr");
         for (Element row : rows){
             String[] split = row.text().split(" ");
@@ -30,6 +33,10 @@ public class HighscoreReader {
 
     public int getXp(String skill){
         return xp.get(skill);
+    }
+
+    public HashMap<String, Integer> getSkillMap(){
+        return this.xp;
     }
 
 }
